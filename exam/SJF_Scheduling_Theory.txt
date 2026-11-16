@@ -1,0 +1,139 @@
+SHORTEST JOB FIRST (SJF) CPU SCHEDULING
+
+1. AIM
+To implement the Shortest Job First (SJF) CPU scheduling algorithm in C++ and calculate the waiting time, turnaround time, completion time, average waiting time and average turnaround time of the processes.
+
+2. INTRODUCTION
+CPU scheduling is the method used by an operating system to decide which process from the ready queue should get the CPU next. When multiple processes are ready, the CPU scheduler selects one process according to a scheduling algorithm.
+
+Shortest Job First (SJF) is a CPU scheduling algorithm in which the process having the smallest CPU burst time is selected for execution first. In this program, non-preemptive SJF is used.
+
+3. WHAT IS CPU BURST TIME?
+CPU burst time is the amount of time a process needs the CPU to complete its current CPU execution. A process with a smaller burst time needs less CPU time than a process with a larger burst time.
+
+4. TYPES OF SJF SCHEDULING
+A. Non-preemptive SJF
+Once a process gets the CPU, it continues running until its CPU burst is completed. A newly arrived process with a shorter burst time cannot interrupt the running process.
+
+B. Preemptive SJF
+A running process can be interrupted if a new process arrives with a shorter remaining burst time. This version is also called Shortest Remaining Time First (SRTF).
+
+The C++ program provided with this theory implements non-preemptive SJF.
+
+5. IMPORTANT TERMS
+1. Arrival Time (AT): The time at which a process enters the ready queue.
+2. Burst Time (BT): The CPU time required by a process.
+3. Completion Time (CT): The time at which a process finishes execution.
+4. Turnaround Time (TAT): The total time taken by a process from arrival to completion.
+5. Waiting Time (WT): The total time a process spends waiting in the ready queue.
+6. Ready Queue: The collection of processes that are ready and waiting for CPU allocation.
+
+6. FORMULAS
+Turnaround Time = Completion Time - Arrival Time
+
+Waiting Time = Turnaround Time - Burst Time
+
+Waiting Time = Start Time - Arrival Time
+(for a single CPU burst in non-preemptive SJF)
+
+Average Waiting Time = Sum of Waiting Times / Number of Processes
+
+Average Turnaround Time = Sum of Turnaround Times / Number of Processes
+
+7. WORKING OF NON-PREEMPTIVE SJF
+1. Read the number of processes.
+2. Read the arrival time and burst time of every process.
+3. Set the current CPU time to zero.
+4. Find all processes that have arrived and are not yet completed.
+5. From those processes, select the one with the smallest burst time.
+6. If no process has arrived yet, advance the current time until a process becomes available.
+7. Execute the selected process completely.
+8. Calculate its completion time, waiting time and turnaround time.
+9. Mark the process as completed.
+10. Repeat until all processes are completed.
+11. Display the process details and calculate the average waiting and turnaround times.
+
+8. EXAMPLE
+Consider the following processes:
+
+Process    Arrival Time    Burst Time
+P1         0               7
+P2         2               4
+P3         4               1
+P4         5               4
+
+SJF execution order:
+P1 -> P3 -> P2 -> P4
+
+Explanation:
+- At time 0, only P1 is available, so P1 runs from 0 to 7.
+- At time 7, P2, P3 and P4 are available. P3 has the shortest burst time, so it runs from 7 to 8.
+- P2 and P4 both have a burst time of 4. P2 arrived earlier, so it runs from 8 to 12.
+- P4 runs from 12 to 16.
+
+Gantt Chart:
+0        7   8       12      16
+|   P1   | P3 |  P2   |  P4   |
+
+Calculation:
+
+Process    CT    TAT = CT - AT    WT = TAT - BT
+P1         7     7 - 0 = 7        7 - 7 = 0
+P2         12    12 - 2 = 10      10 - 4 = 6
+P3         8     8 - 4 = 4        4 - 1 = 3
+P4         16    16 - 5 = 11      11 - 4 = 7
+
+Average Waiting Time = (0 + 6 + 3 + 7) / 4 = 4.00
+
+Average Turnaround Time = (7 + 10 + 4 + 11) / 4 = 8.00
+
+Note: The output table is displayed in process-number order, while the execution order is P1, P3, P2, P4.
+
+9. CHARACTERISTICS OF SJF
+- It selects the available process with the shortest CPU burst time.
+- It can be implemented in preemptive and non-preemptive forms.
+- Non-preemptive SJF does not interrupt a process after it starts.
+- It generally gives a low average waiting time when burst times are known.
+- It may cause starvation of long processes if short processes keep arriving.
+
+10. ADVANTAGES
+1. It can reduce the average waiting time.
+2. Short processes get completed quickly.
+3. It is useful when CPU burst times can be estimated accurately.
+4. It is easy to understand for a small set of processes.
+
+11. DISADVANTAGES
+1. The exact CPU burst time is usually not known in advance.
+2. Long processes may suffer starvation.
+3. It is less suitable for interactive time-sharing systems.
+4. A process with a long burst time may wait for a long time if shorter jobs continue to arrive.
+
+12. STARVATION
+Starvation is a situation in which a process waits for a very long time because other processes keep getting selected before it. In SJF, a long process may experience starvation when short processes repeatedly arrive.
+
+13. TIME AND SPACE COMPLEXITY
+In this simple implementation, the program scans all processes to select the next process. This scan can take O(n) time and may happen up to n times.
+
+Time Complexity: O(n^2)
+
+Space Complexity: O(n), because a vector stores the information of n processes.
+
+14. SAMPLE INPUT
+4
+0 7
+2 4
+4 1
+5 4
+
+15. EXPECTED OUTPUT
+Process  Arrival  Burst  Completion  Waiting  Turnaround
+P1       0        7      7           0        7
+P2       2        4      12          6        10
+P3       4        1      8           3        4
+P4       5        4      16          7        11
+
+Average waiting time: 4.00
+Average turnaround time: 8.00
+
+16. CONCLUSION
+Thus, the non-preemptive Shortest Job First CPU scheduling algorithm is implemented successfully in C++. The program selects the available process with the smallest burst time and calculates the completion time, waiting time, turnaround time, average waiting time and average turnaround time.

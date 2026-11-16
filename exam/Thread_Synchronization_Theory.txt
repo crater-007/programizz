@@ -1,0 +1,268 @@
+OPERATING SYSTEMS PRACTICAL
+RACE CONDITION, STRICT ALTERNATION AND PETERSON'S SOLUTION
+
+============================================================
+TASK 1: REPRODUCE A RACE CONDITION CAUSED BY NON-ATOMIC LOCK VARIABLES
+============================================================
+
+1. AIM
+To reproduce and observe a race condition caused by using a non-atomic lock variable for protecting a shared resource between two threads.
+
+2. INTRODUCTION
+A thread is a small unit of execution within a process. Multiple threads of the same process can execute concurrently and share resources such as global variables and memory.
+
+When two or more threads access shared data at the same time and the final result depends on the order of execution, a race condition may occur.
+
+3. WHAT IS A RACE CONDITION?
+A race condition is a situation in which multiple threads access and modify shared data concurrently, and the result depends on the timing or order of their execution.
+
+For example, suppose two threads increment the same variable:
+sharedCounter = sharedCounter + 1
+
+The increment operation involves reading the value, adding one, and writing the result. If both threads read the same old value before either writes the updated value, one update may be lost.
+
+4. WHAT IS A CRITICAL SECTION?
+A critical section is the part of a program where shared data or resources are accessed or modified. Only one thread should execute the protected critical section at a time when mutual exclusion is required.
+
+5. WHAT IS A LOCK?
+A lock is a synchronization mechanism used to control access to a shared resource. A thread must acquire the lock before entering the critical section and release it after leaving.
+
+A lock variable must support atomic operations. Atomic means an operation happens as one indivisible operation, so other threads cannot observe it halfway through.
+
+6. WHY DOES A NON-ATOMIC LOCK FAIL?
+In the program, the lock is a normal volatile Boolean variable. The operation:
+- Check whether the lock is false.
+- Set the lock to true.
+- Enter the critical section.
+
+These steps are not one indivisible operation. Two threads can both read false before either sets the variable to true. Both may then enter the critical section.
+
+Important: volatile does not make a variable atomic and does not make access between C++ threads safe. Concurrent unsynchronized access to this variable is a C++ data race and causes undefined behavior. Therefore, the exact output is not guaranteed. The program may show overlapping entry or an incorrect counter, but a particular run may also appear correct.
+
+7. OBSERVATION IN THE PROGRAM
+The program runs two threads, each trying to enter the critical section 100,000 times.
+
+It displays:
+- Expected counter value: 200000
+- Actual counter value
+- Maximum number of threads observed inside the critical section
+
+If the maximum active thread count becomes greater than 1, both threads overlapped inside the critical section. If the final counter differs from 200000, an update was lost. Because this program intentionally contains a data race, results can vary between runs and systems.
+
+8. IMPORTANT POINT
+This program is an intentionally incorrect demonstration. Do not use a normal Boolean or volatile Boolean as a thread lock. In real C++ programs, use std::mutex or correctly designed atomic synchronization.
+
+
+============================================================
+TASK 2: STRICT ALTERNATION AND VIOLATION OF THE PROGRESS REQUIREMENT
+============================================================
+
+1. AIM
+To demonstrate how the Strict Alternation algorithm violates the progress requirement of the critical-section problem.
+
+2. INTRODUCTION
+Strict Alternation is a software approach to mutual exclusion for two processes or threads. It uses a shared variable named turn to decide which process is allowed to enter its critical section.
+
+3. HOW STRICT ALTERNATION WORKS
+The shared variable turn can have two values:
+- turn = 0: Thread 0 is allowed to enter.
+- turn = 1: Thread 1 is allowed to enter.
+
+After a thread finishes its critical section, it gives the turn to the other thread.
+
+A thread waits while it is not its turn. This ensures that the two threads do not enter the critical section at the same time, assuming the turn variable is accessed safely.
+
+4. WHAT IS THE PROGRESS REQUIREMENT?
+Progress is one of the requirements of a correct solution to the critical-section problem.
+
+If no thread is inside the critical section and some threads want to enter, the decision about who enters next must not be postponed indefinitely. Only threads that want to enter should participate in this decision.
+
+In simple words, a thread that is not interested in entering its critical section should not prevent another interested thread from entering.
+
+5. HOW STRICT ALTERNATION VIOLATES PROGRESS
+Consider this situation:
+1. Initially, turn = 0.
+2. Thread 0 enters its critical section.
+3. Thread 0 finishes and sets turn = 1.
+4. Thread 1 is executing its remainder section and does not want to enter its critical section.
+5. Thread 0 wants to enter its critical section again.
+6. Thread 0 checks turn. It is 1, so Thread 0 keeps waiting.
+7. Thread 1 is not interested and does not change turn back to 0.
+
+Thread 0 cannot enter even though the critical section is empty. Therefore, the progress requirement is violated.
+
+6. WHAT IS THE REMAINDER SECTION?
+The remainder section is the part of a program outside the critical section. A thread performs its other work in this section.
+
+7. OBSERVATION IN THE PROGRAM
+The program uses an atomic turn variable so that the demonstration itself does not contain a data race on turn.
+
+Thread 0 completes its first critical section and gives the turn to Thread 1. Thread 1 stays in its remainder section. Thread 0 then tries to enter again but remains waiting.
+
+After a short delay, the program reports that progress is violated. A stop variable is used only to release the waiting thread so the demonstration can finish.
+
+8. CONCLUSION OF STRICT ALTERNATION
+Strict Alternation provides mutual exclusion, but it does not satisfy progress. A thread can be forced to wait for its turn even when the other thread is not interested in entering the critical section.
+
+
+============================================================
+TASK 3: IMPLEMENT AND VERIFY PETERSON'S SOLUTION FOR TWO-THREAD MUTUAL EXCLUSION
+============================================================
+
+1. AIM
+To implement and verify Peterson's Solution for achieving mutual exclusion between two threads.
+
+2. INTRODUCTION
+Peterson's Solution is a classical software-based solution to the critical-section problem for two processes or threads. It uses two shared variables:
+- flag[2]
+- turn
+
+The flag array indicates whether a thread wants to enter its critical section. The turn variable helps resolve a situation in which both threads want to enter at the same time.
+
+3. SHARED VARIABLES
+flag[0] = true means Thread 0 wants to enter its critical section.
+flag[1] = true means Thread 1 wants to enter its critical section.
+turn = 0 or 1 indicates which thread should wait when both threads are interested.
+
+Initially:
+flag[0] = false
+flag[1] = false
+turn = 0
+
+4. WORKING OF PETERSON'S SOLUTION
+For a thread with ID i, the other thread is j = 1 - i.
+
+The steps are:
+1. Set flag[i] = true to indicate interest in entering the critical section.
+2. Set turn = j to give the other thread priority if both are interested.
+3. Wait while flag[j] is true and turn == j.
+4. Enter the critical section when the condition becomes false.
+5. Execute the critical section.
+6. Set flag[i] = false after leaving the critical section.
+7. Continue to the remainder section and repeat when required.
+
+5. PSEUDOCODE
+
+do {
+    flag[i] = true;
+    turn = j;
+
+    while (flag[j] == true && turn == j) {
+        wait;
+    }
+
+    critical section;
+
+    flag[i] = false;
+
+    remainder section;
+
+} while (true);
+
+Here, i is the current thread ID and j is the other thread ID.
+
+6. REQUIREMENTS OF THE CRITICAL-SECTION PROBLEM
+
+A correct solution is generally expected to satisfy these three requirements:
+
+A. Mutual Exclusion
+Only one thread can execute its critical section at a time.
+
+B. Progress
+If no thread is in the critical section and one or more threads want to enter, the choice of the next thread should not be postponed indefinitely.
+
+C. Bounded Waiting
+After a thread requests entry, there must be a limit on how many times other threads can enter before that request is granted.
+
+Peterson's Solution satisfies these three requirements for the classical two-process model under its assumed memory model.
+
+7. HOW PETERSON'S SOLUTION ENSURES MUTUAL EXCLUSION
+If only one thread wants to enter, the other thread's flag is false, so the interested thread can enter.
+
+If both threads want to enter, both flags become true. The turn variable decides which thread waits. Both threads cannot pass the waiting condition at the same time under the classical algorithm's assumptions.
+
+8. OBSERVATION IN THE PROGRAM
+The program creates two threads. Each thread executes Peterson's entry protocol 100,000 times and increments a shared counter inside the critical section.
+
+Expected counter value:
+200000
+
+The program also tracks the maximum number of threads inside the critical section.
+
+Expected verification:
+- Actual counter value = 200000
+- Maximum threads inside critical section = 1
+- Mutual exclusion is maintained.
+
+9. ADVANTAGES
+- It is a simple classical solution for two threads.
+- It demonstrates the use of shared variables for synchronization.
+- It satisfies mutual exclusion, progress and bounded waiting in the classical model.
+
+10. LIMITATIONS
+- The classical algorithm is designed for two processes or threads.
+- It uses busy waiting, so a waiting thread repeatedly checks a condition and consumes CPU time.
+- Its textbook proof assumes a suitable memory model and atomic, correctly ordered shared-variable accesses.
+
+C++ NOTE:
+The practical uses std::atomic variables with the default sequentially consistent ordering for flag and turn. This makes the shared synchronization accesses atomic and ordered for the C++ implementation. Peterson's Solution is mainly an educational algorithm; for ordinary production C++ code, std::mutex is generally preferred.
+
+11. TIME AND SPACE COMPLEXITY
+For each attempt to enter the critical section:
+- Entry protocol: O(1) operations, excluding time spent busy-waiting.
+- Exit protocol: O(1).
+- Shared synchronization storage: O(1).
+- The complete practical performs a fixed number of iterations in each of two threads. Actual running time depends on thread scheduling and waiting.
+
+12. VIVA QUESTIONS AND ANSWERS
+
+Q1. What is a race condition?
+Ans. A race condition occurs when multiple threads access shared data concurrently and the result depends on their execution timing.
+
+Q2. What is a critical section?
+Ans. It is the part of a program where shared data or resources are accessed.
+
+Q3. What is mutual exclusion?
+Ans. It ensures that only one thread at a time executes the protected critical section.
+
+Q4. Why is a normal Boolean lock unsafe?
+Ans. Checking and setting a normal Boolean are separate operations, so two threads may both pass the check. In C++, unsynchronized concurrent access also causes a data race and undefined behavior.
+
+Q5. Does volatile make a variable atomic?
+Ans. No. volatile does not provide atomicity or thread synchronization in C++.
+
+Q6. What is Strict Alternation?
+Ans. It is a two-thread method that uses a shared turn variable to alternate access to the critical section.
+
+Q7. Which requirement does Strict Alternation violate?
+Ans. It violates progress.
+
+Q8. Why does Strict Alternation violate progress?
+Ans. A thread may wait for its turn even when the other thread is in its remainder section and does not want to enter.
+
+Q9. What is Peterson's Solution?
+Ans. It is a classical software solution for mutual exclusion between two processes or threads using flag and turn variables.
+
+Q10. What are the shared variables in Peterson's Solution?
+Ans. Two flag variables and one turn variable.
+
+Q11. What does flag[i] represent?
+Ans. It indicates whether thread i wants to enter its critical section.
+
+Q12. What is the purpose of turn?
+Ans. It resolves the conflict when both threads want to enter at the same time.
+
+Q13. What are the three requirements of the critical-section problem?
+Ans. Mutual exclusion, progress and bounded waiting.
+
+Q14. What is busy waiting?
+Ans. Busy waiting occurs when a thread repeatedly checks a condition instead of sleeping.
+
+Q15. Is Peterson's Solution suitable for any number of threads?
+Ans. The classical Peterson's Solution is designed for two threads.
+
+Q16. Why are atomic variables used in the C++ Peterson program?
+Ans. They prevent data races on the shared synchronization variables and provide the required ordering for this implementation.
+
+13. OVERALL CONCLUSION
+The three practicals demonstrate important concepts of process and thread synchronization. The first program shows why a non-atomic lock variable cannot safely protect a shared resource. The second program demonstrates that Strict Alternation can violate the progress requirement. The third program implements Peterson's Solution using atomic shared variables and verifies mutual exclusion for two threads.

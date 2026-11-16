@@ -1,0 +1,269 @@
+FIRST-COME, FIRST-SERVED (FCFS) CPU SCHEDULING
+Theory and Practical Notes
+
+1. AIM
+To implement the First-Come, First-Served (FCFS) CPU scheduling algorithm in C++ and calculate the Waiting Time and Turnaround Time of each process.
+
+2. INTRODUCTION TO CPU SCHEDULING
+A process is a program that is currently being executed. In a multiprogramming operating system, several processes may be ready to execute, but a CPU core can execute only one process at a time.
+
+CPU scheduling is the activity of selecting one process from the ready queue and allocating the CPU to it. The component of the operating system that selects the next process is called the CPU scheduler or short-term scheduler.
+
+3. WHAT IS FCFS SCHEDULING?
+First-Come, First-Served (FCFS) is a simple CPU scheduling algorithm. The process that arrives first in the ready queue gets the CPU first. The processes are executed in their order of arrival.
+
+FCFS follows the FIFO (First-In, First-Out) queue principle:
+- The process that enters the ready queue first is placed at the front.
+- The process at the front is allocated the CPU.
+- After it finishes, the next process gets the CPU.
+
+4. TYPE OF SCHEDULING
+FCFS is a non-preemptive CPU scheduling algorithm.
+
+Non-preemptive scheduling means that once a process gets the CPU, it keeps the CPU until its CPU burst finishes or it blocks/terminates. In the basic FCFS practical, each process is assumed to have one CPU burst and is allowed to finish that burst before the next process starts.
+
+In preemptive scheduling, the operating system may take the CPU away from a running process before its CPU burst is complete.
+
+5. IMPORTANT TERMS
+
+a) Process
+A program in execution is called a process.
+
+b) Ready Queue
+The queue containing processes that are in memory and waiting for CPU allocation.
+
+c) Arrival Time (AT)
+The time at which a process arrives in the ready queue and becomes ready for CPU execution.
+
+d) Burst Time (BT)
+The amount of CPU time required by a process to complete its CPU burst.
+
+e) Completion Time (CT)
+The time at which a process finishes its execution.
+
+f) Turnaround Time (TAT)
+The total time taken by a process from its arrival until its completion.
+
+Formula:
+TAT = CT - AT
+
+g) Waiting Time (WT)
+The total time a process spends waiting in the ready queue before getting the CPU.
+
+For the basic single-CPU-burst scheduling problem:
+WT = TAT - BT
+WT = CT - AT - BT
+
+h) Average Waiting Time
+The sum of waiting times of all processes divided by the total number of processes.
+
+Average WT = (Sum of all waiting times) / n
+
+i) Average Turnaround Time
+The sum of turnaround times of all processes divided by the total number of processes.
+
+Average TAT = (Sum of all turnaround times) / n
+
+Here, n is the total number of processes.
+
+6. WORKING OF FCFS
+1. Read the number of processes.
+2. Read the arrival time and burst time of every process.
+3. Arrange the processes in increasing order of arrival time.
+4. If the CPU is free before the next process arrives, move the current time to that process's arrival time. This represents CPU idle time.
+5. Execute the first available process completely.
+6. Calculate its completion time.
+7. Calculate turnaround time using TAT = CT - AT.
+8. Calculate waiting time using WT = TAT - BT.
+9. Repeat for all remaining processes.
+10. Calculate average waiting time and average turnaround time.
+11. Display the results.
+
+If two processes have the same arrival time, this program keeps their original input order.
+
+7. FORMULAS
+Completion Time:
+CT = Start Time + BT
+
+Turnaround Time:
+TAT = CT - AT
+
+Waiting Time:
+WT = TAT - BT
+or
+WT = CT - AT - BT
+
+Average Waiting Time:
+Average WT = Total WT / n
+
+Average Turnaround Time:
+Average TAT = Total TAT / n
+
+For the first process:
+Start Time = max(0, AT)
+
+For each later process:
+Start Time = max(Previous Process CT, Current Process AT)
+
+8. SOLVED NUMERICAL EXAMPLE
+
+Consider the following processes:
+
+Process    Arrival Time (AT)    Burst Time (BT)
+P1         0                    5
+P2         1                    3
+P3         2                    2
+
+Execution order:
+P1 -> P2 -> P3
+
+Gantt chart:
+0        5       8      10
+|   P1   |  P2   |  P3  |
+
+Calculations:
+
+For P1:
+CT = 0 + 5 = 5
+TAT = 5 - 0 = 5
+WT = 5 - 5 = 0
+
+For P2:
+CT = 5 + 3 = 8
+TAT = 8 - 1 = 7
+WT = 7 - 3 = 4
+
+For P3:
+CT = 8 + 2 = 10
+TAT = 10 - 2 = 8
+WT = 8 - 2 = 6
+
+Result table:
+
+Process    AT    BT    CT    TAT    WT
+P1         0     5     5     5      0
+P2         1     3     8     7      4
+P3         2     2     10    8      6
+
+Average Waiting Time:
+= (0 + 4 + 6) / 3
+= 10 / 3
+= 3.33 time units
+
+Average Turnaround Time:
+= (5 + 7 + 8) / 3
+= 20 / 3
+= 6.67 time units
+
+9. GANTT CHART
+A Gantt chart is a visual representation of the order and duration in which processes use the CPU. It shows the start and finish time of each process and makes it easier to calculate completion, waiting and turnaround times.
+
+10. ADVANTAGES OF FCFS
+- It is simple and easy to understand.
+- It is easy to implement using a FIFO queue.
+- It is fair in terms of arrival order.
+- It does not cause starvation due to priority differences.
+
+11. DISADVANTAGES OF FCFS
+- A long process can make shorter processes wait for a long time.
+- Average waiting time may be high.
+- It is not suitable for interactive and time-sharing systems where quick response is important.
+- It may suffer from the convoy effect.
+
+12. CONVOY EFFECT
+The convoy effect occurs when many short processes wait behind one long process because FCFS executes processes in arrival order. This can increase the average waiting time and reduce overall system performance.
+
+Example:
+If a process with a very long burst time arrives first, all short processes arriving after it must wait until that long process finishes.
+
+13. TIME AND SPACE COMPLEXITY
+Let n be the number of processes.
+
+Time Complexity:
+- Reading process details: O(n)
+- Sorting by arrival time: O(n log n)
+- Calculating CT, TAT and WT: O(n)
+- Displaying results: O(n)
+- Overall time complexity: O(n log n), because sorting takes the most time.
+
+Space Complexity:
+- O(n) for storing the process information in a vector.
+- The sorting operation may also use implementation-dependent auxiliary memory.
+
+14. SPECIAL CASES / EDGE CASES
+- One process: it starts when it arrives and executes for its burst time.
+- Same arrival times: the program preserves the original input order.
+- Unsorted input: the program sorts processes by arrival time.
+- CPU idle time: if no process has arrived, the CPU remains idle until the next arrival.
+- Different burst times: every process runs for its complete burst when it gets the CPU.
+
+15. SAMPLE INPUT
+Enter number of processes: 3
+
+Enter arrival time of P1: 0
+Enter burst time of P1: 5
+
+Enter arrival time of P2: 1
+Enter burst time of P2: 3
+
+Enter arrival time of P3: 2
+Enter burst time of P3: 2
+
+16. EXPECTED OUTPUT (RESULTS)
+Process   AT          BT          CT          TAT         WT
+P1        0           5           5           5           0
+P2        1           3           8           7           4
+P3        2           2           10          8           6
+
+Average Waiting Time: 3.33
+Average Turnaround Time: 6.67
+
+17. VIVA QUESTIONS AND ANSWERS
+
+Q1. What is CPU scheduling?
+Ans. CPU scheduling is the process of selecting a process from the ready queue and allocating the CPU to it.
+
+Q2. What is FCFS?
+Ans. FCFS is a CPU scheduling algorithm in which the process that arrives first gets the CPU first.
+
+Q3. Which data structure is used in FCFS?
+Ans. A FIFO queue.
+
+Q4. Is FCFS preemptive or non-preemptive?
+Ans. FCFS is non-preemptive.
+
+Q5. What is arrival time?
+Ans. The time at which a process enters the ready queue.
+
+Q6. What is burst time?
+Ans. The CPU time required by a process to complete its CPU burst.
+
+Q7. What is completion time?
+Ans. The time at which a process finishes execution.
+
+Q8. What is turnaround time?
+Ans. The total time from process arrival to process completion. TAT = CT - AT.
+
+Q9. What is waiting time?
+Ans. The time a process spends waiting in the ready queue. WT = TAT - BT.
+
+Q10. What is the convoy effect?
+Ans. It occurs when short processes wait behind a long process in FCFS.
+
+Q11. Can two processes have the same arrival time?
+Ans. Yes. In this program, their original input order is preserved.
+
+Q12. What happens if the CPU is idle?
+Ans. The CPU waits until the next process arrives.
+
+Q13. Does FCFS cause starvation?
+Ans. In the basic FCFS queue, a process will not be overtaken by later arrivals, so starvation due to scheduling priority does not occur.
+
+Q14. What is the time complexity of this implementation?
+Ans. O(n log n), because processes are sorted by arrival time.
+
+Q15. What is the main disadvantage of FCFS?
+Ans. It can produce a high average waiting time, especially when a long process arrives before short processes.
+
+18. CONCLUSION
+Thus, the First-Come, First-Served (FCFS) CPU scheduling algorithm was implemented in C++. The processes were executed in increasing order of arrival time, and the completion time, turnaround time, waiting time, average waiting time and average turnaround time were calculated successfully.

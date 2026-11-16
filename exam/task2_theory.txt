@@ -1,0 +1,116 @@
+TASK 2: MONITOR IMPLEMENTATION
+DINING PHILOSOPHERS PROBLEM
+
+1. Aim
+To solve the Dining Philosophers problem using a monitor-style design
+implemented with a Pthread mutex and condition variables in C++.
+
+2. Theory
+The Dining Philosophers problem is a synchronization problem in which
+five philosophers sit around a circular table. Each philosopher alternates
+between thinking and eating. A philosopher needs access to the two forks
+beside them to eat.
+
+A philosopher must not eat while either neighboring philosopher is eating.
+Without proper synchronization, the program may suffer from deadlock,
+starvation, or race conditions.
+
+3. Monitor
+A monitor is a synchronization construct that combines:
+- Shared data.
+- Operations that access the shared data.
+- Mutual exclusion.
+- Condition variables for waiting and signaling.
+
+In this C++ implementation, monitor behavior is simulated using:
+- pthread_mutex_t to protect shared state.
+- pthread_cond_t to suspend and wake philosopher threads.
+
+The DiningPhilosophers class encapsulates the philosophers' states and
+the operations pick_up(int i) and put_down(int i).
+
+4. Philosopher States
+- THINKING: The philosopher is not requesting the forks.
+- HUNGRY: The philosopher wants to eat and is waiting for both forks.
+- EATING: The philosopher has permission to eat.
+
+5. Working
+
+pick_up(int i):
+   1. Acquire the monitor mutex.
+   2. Change philosopher i's state to HUNGRY.
+   3. Check whether both neighbors are not EATING.
+   4. If both forks are available, change the state to EATING.
+   5. Otherwise, wait on that philosopher's condition variable.
+   6. Release the mutex after permission to eat is obtained.
+
+put_down(int i):
+   1. Acquire the monitor mutex.
+   2. Change philosopher i's state to THINKING.
+   3. Check the left and right neighbors.
+   4. Wake a hungry neighbor if both of that neighbor's forks are available.
+   5. Release the mutex.
+
+The condition-variable wait operation releases the mutex while the thread
+is blocked and reacquires it before returning. The while loop checks the
+condition again after waking, which also handles spurious wakeups.
+
+6. Neighbor Check
+For philosopher i:
+   left  = (i + 4) % 5
+   right = (i + 1) % 5
+
+Philosopher i can eat only when:
+   state[left] != EATING
+   state[right] != EATING
+
+This ensures that adjacent philosophers cannot eat at the same time.
+
+7. Advantages
+- Prevents simultaneous access to shared state.
+- Avoids busy waiting by using condition variables.
+- Allows non-adjacent philosophers to eat concurrently.
+- Keeps synchronization logic inside one class, following the monitor
+  design principle.
+
+8. Compilation and Execution
+Save the source file as dining_philosophers.cpp.
+
+Compile:
+   g++ -std=c++17 dining_philosophers.cpp -o dining_philosophers -pthread
+
+Run:
+   ./dining_philosophers
+
+9. Viva Questions
+
+Q1. What is a monitor?
+A. A monitor is a synchronization structure that encapsulates shared data
+   and operations, providing mutual exclusion and condition-based waiting.
+
+Q2. What is the purpose of a condition variable?
+A. It allows a thread to sleep until a required condition becomes true,
+   avoiding busy waiting.
+
+Q3. Why is a while loop used with pthread_cond_wait()?
+A. A thread must recheck its condition after waking because wakeups can be
+   spurious or the condition may no longer be true.
+
+Q4. Can two neighboring philosophers eat at the same time?
+A. No. The monitor checks both neighbors before allowing a philosopher
+   to enter the EATING state.
+
+Q5. What are the three states of a philosopher?
+A. THINKING, HUNGRY, and EATING.
+
+Q6. What is the role of the mutex?
+A. It ensures that only one thread at a time modifies the shared state.
+
+Q7. What is busy waiting?
+A. Busy waiting occurs when a thread repeatedly checks a condition instead
+   of sleeping while it waits.
+
+Q8. What is the difference between a semaphore and a monitor?
+A. Semaphores use wait and signal operations explicitly. A monitor
+   encapsulates shared data and synchronization operations, usually with
+   condition variables.

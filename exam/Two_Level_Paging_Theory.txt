@@ -1,0 +1,77 @@
+LAB ASSIGNMENT: SIMULATING TWO-LEVEL PAGING
+
+Objective
+To understand how a Memory Management Unit (MMU) translates a 32-bit logical address into a physical address using a two-level paging system.
+
+Background Theory
+Paging is a memory-management technique in which virtual memory is divided into fixed-size pages and physical memory is divided into frames of the same size. A page table maps virtual pages to physical frames.
+
+For a 32-bit virtual address and a page size of 4 KB, the address is divided into three parts:
+1. Page Directory Index: 10 bits (bits 22 to 31).
+2. Page Table Index: 10 bits (bits 12 to 21).
+3. Page Offset: 12 bits (bits 0 to 11).
+
+Each page directory contains 1,024 entries. Each second-level page table also contains 1,024 entries. The offset identifies the byte within a 4 KB page.
+
+Task 1: Address Parsing
+The directory index is extracted by shifting the address right by 22 bits and applying the mask 0x3FF.
+The table index is extracted by shifting the address right by 12 bits and applying the mask 0x3FF.
+The offset is extracted by applying the mask 0xFFF.
+
+Task 2: Data Structure Initialization
+The PageTable structure contains 1,024 integer entries. Every entry is initialized to -1, which indicates that no physical frame has been assigned.
+The PageDirectory structure contains 1,024 pointers to PageTable objects. Every pointer is initialized to nullptr.
+The variable next_free_frame keeps track of the next available physical frame. It starts at zero and increases whenever a new frame is assigned.
+
+Task 3: Address Translation
+The translate function first parses the virtual address.
+It checks the page directory using the directory index. If the pointer is nullptr, a new page table is created dynamically.
+It then checks the selected page table entry. If the entry is -1, a new physical frame is assigned and the frame counter is increased.
+The physical address is calculated using:
+Physical Address = (Frame Number << 12) | Offset
+
+Task 4: Execution and Analysis
+The program translates the four given virtual addresses:
+
+1. 0x00000000
+   Directory index = 0, table index = 0, offset = 0.
+   A new page table and a new physical frame are allocated.
+
+2. 0x00000004
+   Directory index = 0, table index = 0, offset = 4.
+   It uses the existing page table entry and physical frame. No new page fault occurs.
+
+3. 0x00400000
+   Directory index = 1, table index = 0, offset = 0.
+   A new page table and a new physical frame are allocated.
+
+4. 0xFFFFF000
+   Directory index = 1023, table index = 1023, offset = 0.
+   A new page table and a new physical frame are allocated.
+
+Memory Analysis
+Three different page directory entries are used, so three second-level page tables are allocated.
+
+Each page table contains 1,024 integers. Assuming an integer occupies 4 bytes:
+Memory per page table = 1,024 x 4 = 4,096 bytes.
+
+Memory used by three page tables = 3 x 4,096 = 12,288 bytes.
+
+The page directory contains 1,024 pointers. Its size depends on the system architecture:
+- On a 64-bit system: 1,024 x 8 = 8,192 bytes.
+- On a 32-bit system: 1,024 x 4 = 4,096 bytes.
+
+Therefore, the total memory used by the paging structures is:
+- 64-bit system: 12,288 + 8,192 = 20,480 bytes.
+- 32-bit system: 12,288 + 4,096 = 16,384 bytes.
+
+A single-level page table with 1,048,576 entries of 4 bytes each requires 4,194,304 bytes (4 MB).
+
+The two-level paging system allocates only the second-level page tables that are needed. In this simulation, it uses 12,288 bytes for page tables instead of 4,194,304 bytes for a complete single-level page table.
+
+Conclusion
+The simulation demonstrates how a two-level paging system separates a virtual address into directory index, table index, and offset. It dynamically creates page tables and physical frames only when required. The given addresses require three second-level page tables, which use 12,288 bytes. This is much less memory than the 4 MB required for a complete single-level page table.
+
+Compilation and Execution
+g++ Two_Level_Paging.cpp -o Two_Level_Paging
+./Two_Level_Paging

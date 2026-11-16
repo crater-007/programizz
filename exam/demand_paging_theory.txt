@@ -1,0 +1,229 @@
+DEMAND PAGING AND PAGE REPLACEMENT
+Theory Notes and Program Guide
+
+1. INTRODUCTION
+
+Demand paging is a memory management technique used by operating systems. In this method, a page is loaded into main memory only when a process actually needs it. A process is divided into fixed-size blocks called pages, while physical memory is divided into blocks of the same size called frames.
+
+When a requested page is already present in main memory, the access is completed normally. When the page is not present, a page fault occurs. The operating system then brings the required page from secondary storage into a free frame. If no free frame is available, a page already in memory must be selected for replacement.
+
+Demand paging helps reduce memory usage because pages that are never accessed do not need to be loaded. It also allows programs larger than physical memory to execute.
+
+2. IMPORTANT TERMS
+
+Page:
+A fixed-size block of a process's virtual address space.
+
+Frame:
+A fixed-size block of physical memory that can hold one page.
+
+Page table:
+A data structure maintained by the operating system to map virtual pages to physical frames and record information about each page.
+
+Page hit:
+An access in which the requested page is already present in memory.
+
+Page fault:
+An access in which the requested page is not present in memory.
+
+Page replacement:
+The process of selecting a page currently in memory to remove when a new page must be loaded and no free frame is available.
+
+Reference bit (R):
+A bit that indicates whether a page has been accessed recently. It is set to 1 when the page is accessed. The replacement algorithm may clear it to 0.
+
+Modify bit (M), also called dirty bit:
+A bit that indicates whether a page has been changed by a write operation. It is set to 1 after a write. A modified page generally has to be written back to disk before it is replaced.
+
+Disk write:
+The operation of writing a modified page from memory back to secondary storage.
+
+3. PAGE FAULT HANDLING
+
+A typical page fault is handled in the following way:
+
+1. The CPU references a page.
+2. The operating system checks whether the page is in memory.
+3. If it is present, the access is a page hit.
+4. If it is absent, a page fault is raised.
+5. The operating system locates the required page on secondary storage.
+6. If a free frame exists, the page is loaded into it.
+7. Otherwise, a page replacement algorithm selects a victim page.
+8. If the victim page is modified, it is written to disk.
+9. The required page is loaded into the selected frame.
+10. The page table is updated and the interrupted instruction can continue.
+
+4. SECOND CHANCE PAGE REPLACEMENT ALGORITHM
+
+Second Chance is a modification of the FIFO (First-In, First-Out) page replacement algorithm. FIFO replaces the page that has been in memory for the longest time. Second Chance checks the reference bit before replacing a page.
+
+The algorithm uses a circular arrangement of frames and a pointer, often called the clock hand.
+
+Working:
+
+1. When a page is accessed, its reference bit is set to 1.
+2. When a page fault occurs, the algorithm checks the frame indicated by the clock hand.
+3. If the frame is empty, the new page is placed there.
+4. If the page's reference bit is 0, that page is selected for replacement.
+5. If its reference bit is 1, the bit is cleared to 0 and the clock hand moves to the next frame. The page is given a second chance.
+6. The search continues until an empty frame or a page with reference bit 0 is found.
+7. The new page is inserted and its reference bit is set to 1.
+8. The clock hand moves to the next frame.
+
+Advantages:
+
+- It is relatively simple to implement.
+- It avoids replacing pages that have been referenced recently.
+- It generally performs better than basic FIFO for many access patterns.
+
+Disadvantages:
+
+- It may scan several frames before finding a victim.
+- It does not consider whether a page has been modified.
+- Its performance depends on the reference pattern.
+
+In this program, Second Chance treats all requests as read operations, as required by the task. Therefore, it uses the reference bit but does not need to write pages to disk.
+
+5. ENHANCED SECOND CHANCE ALGORITHM
+
+Enhanced Second Chance improves the basic Second Chance algorithm by using two bits for every page:
+
+- R = Reference bit
+- M = Modify bit
+
+The two bits place a page into one of four classes:
+
+Class (0,0):
+The page has not been referenced recently and has not been modified. It is the preferred victim because it can be replaced without writing it to disk.
+
+Class (0,1):
+The page has not been referenced recently but has been modified. It can be replaced, but it must be written to disk.
+
+Class (1,0):
+The page has been referenced recently but has not been modified. It is usually given another chance.
+
+Class (1,1):
+The page has been referenced recently and has been modified. It is generally the least preferred class.
+
+The algorithm prefers the classes in this order:
+
+(0,0) -> (0,1) -> (1,0) -> (1,1)
+
+Working:
+
+1. On every page access, set R to 1.
+2. On a write request, also set M to 1.
+3. On a page fault, use a free frame if one is available.
+4. If all frames are occupied, search from the clock hand for a page in class (0,0).
+5. If no such page exists, clear the reference bits of pages that have R = 1.
+6. Search again for a page in class (0,1).
+7. Replace the selected page. If its modify bit is 1, count one disk write.
+8. Load the requested page, set R to 1, and set M according to the new request.
+9. Move the clock hand to the frame after the replaced frame.
+
+The implementation in this assignment performs a circular search for class (0,0). If none is found, it clears the reference bits and searches for class (0,1). This is a common practical form of the Enhanced Second Chance algorithm.
+
+Advantages:
+
+- It considers both recent usage and whether a page has been modified.
+- It tries to avoid unnecessary disk writes.
+- It gives preference to pages that can be removed without writing them back.
+
+Disadvantages:
+
+- It is more complex than basic Second Chance.
+- It maintains an additional bit for each page.
+- It may need more than one scan of the frames.
+
+6. INPUT FORMAT USED BY THE PROGRAM
+
+The first line contains the number of available frames.
+
+The second line contains page requests. Each request is written as:
+
+page_number:operation
+
+R means read and W means write.
+
+Example:
+
+3
+2:R 3:W 1:R 2:W 4:R 5:W 2:R
+
+This example has three available frames. The request 3:W means that page 3 is accessed for writing.
+
+The same request sequence is used for both simulations. The Second Chance simulation ignores the operation type and treats every request as a read. The Enhanced Second Chance simulation uses the operation type to update the modify bit.
+
+7. OUTPUT EXPLANATION
+
+After every page fault, the program prints the current contents of all frames.
+
+For Second Chance, each frame is displayed with its page number and reference bit:
+
+[ page | R:bit ]
+
+For Enhanced Second Chance, each frame is displayed with its page number, reference bit, and modify bit:
+
+[ page | R:bit M:bit ]
+
+An empty frame is displayed with a dash.
+
+At the end of each simulation, the program displays:
+
+- Total Page Hits: number of requests served from memory.
+- Total Page Faults: number of requests that were not in memory.
+- Pages Written to Disk: number of dirty victim pages written back during replacement.
+
+The disk-write count is shown for Enhanced Second Chance. A dirty page still present in memory at the end of the simulation is not counted, because it has not been evicted and written back during this simulation.
+
+8. COMPARISON OF THE TWO ALGORITHMS
+
+Second Chance uses only the reference bit. It gives recently used pages another opportunity to remain in memory. It treats all accesses as reads in this assignment, so it does not count disk writes for dirty-page replacement.
+
+Enhanced Second Chance uses both the reference and modify bits. It considers whether a page was recently used and whether it has been changed. It prefers clean pages when selecting a victim, which can reduce the number of disk writes.
+
+The number of page faults is not guaranteed to be lower for Enhanced Second Chance in every reference sequence. The actual result depends on the frame count and the order of page requests. The algorithms may also select different victim pages.
+
+Disk I/O comparison:
+- A page read from secondary storage is needed whenever a page fault loads a page.
+- A dirty victim may require an additional disk write before replacement.
+- The program reports dirty-page writes separately. It does not count page reads as disk writes.
+
+9. TIME COMPLEXITY
+
+Let F be the number of frames and Q be the number of page requests.
+
+For each request, the program searches the frames to determine whether the page is already present. This takes O(F) time.
+
+When a replacement is required, the clock-based search may inspect up to O(F) frames. Therefore, the overall worst-case time complexity is O(Q x F).
+
+The frame storage requires O(F) space, and the stored request sequence requires O(Q) space.
+
+10. HOW TO COMPILE AND RUN
+
+Save the source code as demand_paging.cpp.
+
+Using g++:
+
+g++ demand_paging.cpp -o demand_paging
+
+Run on Linux or macOS:
+
+./demand_paging
+
+Run on Windows:
+
+demand_paging.exe
+
+Enter the frame count on the first line and the page requests on the second line.
+
+11. SAMPLE INPUT
+
+3
+2:R 3:W 1:R 2:W 4:R 5:W 2:R
+
+12. CONCLUSION
+
+Demand paging loads pages only when they are required. Page replacement algorithms decide which page should leave memory when a page fault occurs and all frames are occupied.
+
+Second Chance improves FIFO by using a reference bit to protect recently accessed pages. Enhanced Second Chance adds a modify bit and prefers clean pages, helping to reduce disk writes. The simulation demonstrates how both algorithms manage frames, count hits and faults, and handle modified pages.
