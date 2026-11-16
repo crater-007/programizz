@@ -1,0 +1,797 @@
+/* ==========================================================================
+   Programiz Online Compiler - Exact Screenshot Replication
+   ========================================================================== */
+
+:root {
+  /* Exact Programiz Dark Palette */
+  --header-bg: #1f2023;
+  --sidebar-bg: #383a40;
+  --panel-header-bg: #1d1f30;
+  --editor-bg: #1a1c24;
+  --terminal-bg: #1a1c24;
+  
+  --border-subtle: #2d303e;
+  --border-medium: #3c4052;
+  
+  --text-main: #ffffff;
+  --text-sub: #9da5b4;
+  --text-dim: #5c6375;
+  
+  --color-primary: #4700f5;
+  --color-primary-hover: #3c00d6;
+  --color-primary-light: rgba(71, 0, 245, 0.18);
+  
+  --color-success: #10b981;
+  --color-error: #f87171;
+  
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'Fira Code', 'Consolas', monospace;
+  
+  --header-height: 72px;
+  --sidebar-width: 44px;
+  --tab-height: 42px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: var(--editor-bg);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ==========================================================================
+   Top Header Bar (Height: 72px matching exact screenshot)
+   ========================================================================== */
+.top-nav {
+  height: 72px;
+  background: #1f2023;
+  border-bottom: 1px solid #141520;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 50;
+  user-select: none;
+}
+
+.nav-brand-container {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.programiz-brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.programiz-logo {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.programiz-logo-img {
+  height: 22px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.sub-compiler-title {
+  font-size: 11px;
+  color: var(--text-sub);
+  margin-top: 4px;
+  padding-left: 1px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Advertisement Banner Container in Header Center */
+.nav-ad-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-width: 495px;
+  margin: 0 16px;
+  height: 63px;
+  overflow: hidden;
+}
+
+.ad-banner-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ad-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Right Header Buttons */
+.nav-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.btn-install {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #4700f5;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  height: 29px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-install:hover {
+  background: #3c00d6;
+}
+
+.btn-pro {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1f2023;
+  color: #ffffff;
+  border: 1px solid #45474f;
+  border-radius: 5px;
+  height: 29px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-pro:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #60636d;
+}
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-pro:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #555b73;
+}
+
+.pro-arrow {
+  font-size: 10px;
+  color: var(--text-sub);
+}
+
+/* ==========================================================================
+   Options Dropdown on 3 Dots Button (No external modals or windows)
+   ========================================================================== */
+.more-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.options-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 320px;
+  background: var(--header-bg);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65);
+  z-index: 100;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+.options-dropdown.hidden {
+  display: none !important;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 3px 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.12s ease;
+}
+
+.menu-item:hover {
+  background: var(--panel-header-bg);
+}
+
+.menu-item > i {
+  font-size: 14px;
+  color: var(--color-primary);
+  width: 16px;
+  text-align: center;
+}
+
+.menu-item-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.menu-item-title {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.menu-item-sub {
+  font-size: 10px;
+  color: var(--text-sub);
+}
+
+.menu-arrow {
+  font-size: 10px;
+  color: var(--text-sub);
+  transition: transform 0.15s ease;
+}
+
+.menu-item-expandable.expanded .menu-arrow {
+  transform: rotate(90deg);
+}
+
+.exam-code-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 340px;
+  overflow-y: auto;
+  background: var(--editor-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 4px;
+  margin: 3px 0;
+}
+
+.exam-code-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.exam-code-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.exam-code-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.exam-code-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.exam-code-list.hidden {
+  display: none !important;
+}
+
+.exam-code-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-main);
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+.exam-code-item:hover {
+  background: var(--panel-header-bg);
+  color: #818cf8;
+}
+
+.exam-code-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+}
+
+.exam-icon-text {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: 3px;
+  padding: 0 4px;
+  min-width: 26px;
+  text-align: center;
+  line-height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.exam-code-item-left i {
+  color: #a5b4fc;
+  font-size: 12px;
+  width: 26px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.exam-code-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.exam-code-badge {
+  font-size: 9px;
+  background: var(--color-primary-light);
+  color: #a5b4fc;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+
+.exam-code-badge.badge-txt {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.exam-code-badge.badge-cpp,
+.exam-code-badge.badge-c {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+/* ==========================================================================
+   Main Body: Left Sidebar + Dual Workspace
+   ========================================================================== */
+.main-body {
+  flex: 1;
+  display: flex;
+  height: calc(100vh - var(--header-height));
+  overflow: hidden;
+}
+
+/* Left Vertical Language Selector Sidebar */
+.sidebar-lang {
+  width: 68px;
+  background: #383a40;
+  border-right: 1px solid #282a2f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 11px 0;
+  gap: 15px;
+  overflow-y: auto;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.sidebar-lang::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-lang::-webkit-scrollbar-thumb {
+  background: #4a4d55;
+  border-radius: 2px;
+}
+
+.lang-nav-item {
+  width: 48px;
+  height: 46px;
+  border-radius: 6px;
+  background: #383a40;
+  border: 1px solid #606166;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.lang-nav-item img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.lang-nav-item:hover {
+  background: #43464e;
+  border-color: #7b7e88;
+}
+
+/* Active language icon: exact purple/indigo rounded square */
+.lang-nav-item.active {
+  background: #4700f5 !important;
+  border: 1px solid #4700f5 !important;
+  box-shadow: 0 2px 10px rgba(71, 0, 245, 0.45);
+}
+
+/* ==========================================================================
+   Dual Pane Split Workspace
+   ========================================================================== */
+.workspace {
+  flex: 1;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  background: var(--editor-bg);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.editor-panel {
+  flex: 1 1 50%;
+  min-width: 250px;
+}
+
+.output-panel {
+  flex: 1 1 50%;
+  min-width: 250px;
+  background: var(--terminal-bg);
+}
+
+/* Header bars for panels (Increased Height: 42px) */
+.editor-header-bar, .output-header-bar {
+  height: 42px;
+  background: #1c1d2f;
+  border-bottom: 1px solid #141525;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  user-select: none;
+}
+
+/* Editor Tab main.py */
+.tab-pill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.editor-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Visualize Button */
+.btn-visualize {
+  height: 29px;
+  background: #35363c;
+  border: 1px solid #4a4b54;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Inter', -apple-system, sans-serif;
+  padding: 0 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+  line-height: 1;
+}
+
+.btn-visualize:hover {
+  background: #3f4148;
+  border-color: #5d5f6b;
+}
+
+/* Run Button */
+.btn-run-main {
+  height: 29px;
+  background: #4700f5;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, sans-serif;
+  padding: 0 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 2px;
+  transition: background 0.12s ease;
+  line-height: 1;
+}
+
+.btn-run-main:hover {
+  background: #3d00d4;
+}
+
+.run-play-icon {
+  font-size: 9px;
+  margin-left: 2px;
+}
+
+/* Output Header */
+.output-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  padding-left: 4px;
+}
+
+.output-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-tool-icon {
+  background: transparent;
+  border: none;
+  color: #828698;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.12s ease;
+}
+
+.btn-tool-icon:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Draggable Splitter Divider matching exact screenshot */
+.splitter {
+  width: 5px;
+  background: #141520;
+  border-left: 1px solid #232536;
+  cursor: col-resize;
+  position: relative;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.splitter-handle-pill {
+  display: none;
+}
+
+/* ==========================================================================
+   CodeMirror Custom Styling (Exact Programiz Editor Theme)
+   ========================================================================== */
+.editor-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--editor-bg);
+}
+
+.CodeMirror {
+  height: 100% !important;
+  font-family: var(--font-mono) !important;
+  font-size: 14px;
+  line-height: 1.6;
+  background: var(--editor-bg) !important;
+  color: #d1d5db !important;
+}
+
+.CodeMirror-gutters {
+  background: var(--editor-bg) !important;
+  border-right: 1px solid transparent !important;
+  padding: 0 8px 0 4px;
+}
+
+.CodeMirror-linenumber {
+  color: #4b5266 !important;
+  font-size: 13px;
+}
+
+.CodeMirror-activeline-background {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.CodeMirror-cursor {
+  border-left: 2px solid #ffffff !important;
+}
+
+/* Syntax Highlighting matching screenshot */
+.cm-comment { color: #5c6375 !important; font-style: normal !important; }
+.cm-string { color: #98c379 !important; }
+.cm-builtin, .cm-keyword { color: #61afef !important; font-weight: 500; }
+.cm-def { color: #e5c07b !important; }
+.cm-variable { color: #d1d5db !important; }
+.cm-number { color: #d19a66 !important; }
+.cm-operator { color: #56b6c2 !important; }
+
+/* Feedback Badge */
+.editor-footer-simple {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.feedback-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ==========================================================================
+   Output Terminal
+   ========================================================================== */
+.output-body {
+  flex: 1;
+  background: var(--terminal-bg);
+  color: #f3f4f6;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  padding: 16px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.output-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.output-text .stdout { color: #f9fafb; }
+.output-text .stderr { color: #f87171; }
+.output-text .info { color: #818cf8; }
+.output-text .success { color: #34d399; }
+
+/* Interactive STDIN Input */
+.stdin-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-medium);
+  border-radius: 4px;
+}
+
+.stdin-container.hidden { display: none; }
+.stdin-prompt { color: var(--color-success); font-weight: 700; }
+
+#stdin-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.btn-stdin {
+  background: var(--border-medium);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-stdin:hover {
+  background: var(--color-primary);
+}
+
+@media (max-width: 900px) {
+  .nav-ad-container {
+    display: none;
+  }
+}
