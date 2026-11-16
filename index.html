@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Python Compiler (Interpreter) - Programiz</title>
+  <meta name="description" content="Online Python compiler (interpreter) to run Python online. Write and run Python online using this editor.">
+  
+  <!-- Programiz 'P' Favicon extracted from logo -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CodeMirror CSS & Themes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="programiz-dark">
+  <div class="app-container">
+    
+    <!-- Top Header matching screenshot -->
+    <header class="top-nav">
+      <div class="nav-brand-container">
+        <div class="programiz-brand">
+          <div class="programiz-logo">
+            <img src="assets/programiz_logo.png" alt="Programiz" class="programiz-logo-img">
+          </div>
+          <span class="sub-compiler-title" id="top-compiler-title">Python Online Compiler</span>
+        </div>
+      </div>
+
+      <!-- Advertisement Banner matching exact screenshot -->
+      <div class="nav-ad-container" title="Advertisement">
+        <a href="https://www.adobe.com" target="_blank" rel="noopener noreferrer" class="ad-banner-link">
+          <img src="assets/ad_banner.png" alt="Adobe Creative Cloud Pro - Advertisement" class="ad-banner-img">
+        </a>
+      </div>
+
+      <div class="nav-right-actions">
+        <!-- Install Button -->
+        <button class="btn-install" id="btn-install" title="Install App">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Install</span>
+        </button>
+
+        <!-- Programiz PRO Button -->
+        <a href="https://programiz.pro" target="_blank" class="btn-pro" title="Programiz PRO">
+          <span>Programiz PRO</span>
+          <i class="fa-solid fa-chevron-right pro-arrow"></i>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Workspace with Left Sidebar + Dual Split Panes -->
+    <div class="main-body">
+      
+      <!-- Left Vertical Language Selector Sidebar matching screenshot -->
+      <aside class="sidebar-lang" id="sidebar-lang">
+        <button class="lang-nav-item active" data-lang="python" title="Python">
+          <img src="assets/sidebar/python.png" alt="Python">
+        </button>
+        <button class="lang-nav-item" data-lang="r" title="R">
+          <img src="assets/sidebar/r.png" alt="R">
+        </button>
+        <button class="lang-nav-item" data-lang="sql" title="SQL">
+          <img src="assets/sidebar/sql.png" alt="SQL">
+        </button>
+        <button class="lang-nav-item" data-lang="html" title="HTML / CSS">
+          <img src="assets/sidebar/html.png" alt="HTML">
+        </button>
+        <button class="lang-nav-item" data-lang="java" title="Java">
+          <img src="assets/sidebar/java.png" alt="Java">
+        </button>
+        <button class="lang-nav-item" data-lang="kotlin" title="Kotlin">
+          <img src="assets/sidebar/kotlin.png" alt="Kotlin">
+        </button>
+        <button class="lang-nav-item" data-lang="c" title="C">
+          <img src="assets/sidebar/c.png" alt="C">
+        </button>
+        <button class="lang-nav-item" data-lang="cpp" title="C++">
+          <img src="assets/sidebar/cpp.png" alt="C++">
+        </button>
+        <button class="lang-nav-item" data-lang="csharp" title="C#">
+          <img src="assets/sidebar/csharp.png" alt="C#">
+        </button>
+        <button class="lang-nav-item" data-lang="javascript" title="JavaScript">
+          <img src="assets/sidebar/javascript.png" alt="JavaScript">
+        </button>
+        <button class="lang-nav-item" data-lang="typescript" title="TypeScript">
+          <img src="assets/sidebar/typescript.png" alt="TypeScript">
+        </button>
+        <button class="lang-nav-item" data-lang="go" title="Go">
+          <img src="assets/sidebar/go.png" alt="Go">
+        </button>
+        <button class="lang-nav-item" data-lang="rust" title="Rust">
+          <img src="assets/sidebar/rust.png" alt="Rust">
+        </button>
+      </aside>
+
+      <!-- Workspace Area: Editor & Output -->
+      <main class="workspace" id="workspace">
+        
+        <!-- Left Panel: Code Editor -->
+        <section class="panel editor-panel" id="editor-panel">
+          <!-- Editor Tab Bar with main.py, Visualize, and Run -->
+          <div class="editor-header-bar">
+            <div class="tab-pill active">
+              <span id="tab-filename">main.py</span>
+            </div>
+
+            <div class="editor-actions-right">
+              <button class="btn-visualize" id="btn-visualize" title="Visualize code execution">
+                <span>Visualize</span>
+              </button>
+
+              <button class="btn-run-main" id="run-btn" title="Run code (Ctrl + Enter)">
+                <span>Run</span>
+                <i class="fa-solid fa-play run-play-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- CodeMirror Editor Container -->
+          <div class="editor-body">
+            <textarea id="code-editor"></textarea>
+          </div>
+
+          <!-- Subtle bottom feedback / status -->
+          <div class="editor-footer-simple">
+            <span id="action-feedback" class="feedback-badge" style="display:none;">
+              <i class="fa-solid fa-check"></i>
+              <span id="action-feedback-text">Pasted & Copied</span>
+            </span>
+          </div>
+        </section>
+
+        <!-- Draggable Splitter Divider with 6-dot handle -->
+        <div class="splitter" id="splitter" title="Drag to resize">
+          <div class="splitter-handle-pill">
+            <span class="handle-dots"></span>
+          </div>
+        </div>
+
+        <!-- Right Panel: Output Terminal -->
+        <section class="panel output-panel" id="output-panel">
+          <div class="output-header-bar">
+            <div class="output-title">Output</div>
+            <div class="output-actions">
+              <button class="btn-tool-icon" id="btn-share" title="Share code">
+                <i class="fa-solid fa-share-nodes"></i>
+              </button>
+              
+              <!-- 3 Dots Button with Options Dropdown -->
+              <div class="more-menu-container">
+                <button class="btn-tool-icon" id="btn-more-options" title="More options & code snippets">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
+
+                <!-- Inline Dropdown (No external modal or popup window) -->
+                <div id="options-dropdown" class="options-dropdown hidden">
+                  <!-- Direct Paste Option -->
+                  <button class="menu-item" id="menu-paste-btn" title="Paste clipboard code with exact indentation">
+                    <i class="fa-solid fa-paste"></i>
+                    <div class="menu-item-text">
+                      <span class="menu-item-title">Paste from Clipboard</span>
+                      <span class="menu-item-sub">Directly paste code with indentation</span>
+                    </div>
+                  </button>
+
+                  <div class="menu-divider"></div>
+
+                  <!-- "Code" Option to expand Exam Code list -->
+                  <button class="menu-item menu-item-expandable" id="menu-code-btn" title="View Exam Code files">
+                    <i class="fa-solid fa-code"></i>
+                    <div class="menu-item-text">
+                      <span class="menu-item-title">Code</span>
+                      <span class="menu-item-sub">Select and paste from exam folder</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right menu-arrow" id="menu-code-arrow"></i>
+                  </button>
+
+                  <!-- Inline List of Code Snippets from @[exam] folder -->
+                  <div id="exam-code-list" class="exam-code-list hidden">
+                    <!-- Dynamically populated from ExamCodes -->
+                  </div>
+
+                  <div class="menu-divider"></div>
+
+                  <!-- Quick Copy Editor Code -->
+                  <button class="menu-item" id="menu-copy-all-btn">
+                    <i class="fa-regular fa-copy"></i>
+                    <div class="menu-item-text">
+                      <span class="menu-item-title">Copy Editor Code</span>
+                      <span class="menu-item-sub">Copy all code to clipboard</span>
+                    </div>
+                  </button>
+
+                  <button class="menu-item" id="menu-reset-btn">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <div class="menu-item-text">
+                      <span class="menu-item-title">Reset Code</span>
+                      <span class="menu-item-sub">Reset to default starter</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="output-body" id="output-body">
+            <div id="output-text" class="output-text"></div>
+
+            <!-- Interactive STDIN Input Box -->
+            <div id="stdin-container" class="stdin-container hidden">
+              <span class="stdin-prompt">&gt;</span>
+              <input type="text" id="stdin-input" placeholder="Enter program input..." autocomplete="off"/>
+              <button id="stdin-submit-btn" class="btn-stdin">Send</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- CodeMirror JS & Addons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/r/r.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+
+  <!-- Application Modules -->
+  <script src="js/exam_codes.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/runner.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
