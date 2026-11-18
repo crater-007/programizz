@@ -33,8 +33,18 @@ def clean_title(filename):
     clean = re.sub(r'\(\s*\d+\s*\)', '', name)
     clean = clean.replace("_", " ").replace("-", " ")
     
-    # Capitalize words
-    words = [w.capitalize() if not w.isupper() else w for w in clean.split()]
+    # Capitalize words & handle common acronyms
+    words = []
+    for w in clean.split():
+        w_lower = w.lower()
+        if w_lower == 'oops':
+            words.append('OOPs')
+        elif w_lower == 'baseclass':
+            words.append('Base Class')
+        elif not w.isupper():
+            words.append(w.capitalize())
+        else:
+            words.append(w)
     title = " ".join(words)
     
     if is_theory:
