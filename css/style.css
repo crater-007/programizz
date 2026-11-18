@@ -381,6 +381,11 @@ html, body {
   flex-shrink: 0;
 }
 
+.exam-code-item-left i.fa-python {
+  color: #60a5fa;
+  font-size: 13px;
+}
+
 .exam-code-title {
   white-space: nowrap;
   overflow: hidden;
@@ -410,6 +415,12 @@ html, body {
   background: rgba(56, 189, 248, 0.12);
   color: #38bdf8;
   border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.exam-code-badge.badge-py {
+  background: rgba(99, 102, 241, 0.18);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.35);
 }
 
 /* ==========================================================================
